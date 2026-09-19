@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkillSwap — Creator Gig Marketplace</title>
+<style>
+:root{
+  --bg:#f7f8fc; --surface:#fff; --text:#182033; --muted:#6d7485;
+  --primary:#6c4cff; --primary2:#8b6cff; --border:#e7e9f0;
+  --success:#16855b; --success-bg:#eaf8f1; --danger:#c43f51; --danger-bg:#fff0f2;
+  --shadow:0 12px 35px rgba(29,31,48,.08); --radius:20px;
+}
+*{box-sizing:border-box;scroll-behavior:smooth}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0}
+.nav{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1180px;margin:auto;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 22px}
+.logo{font-weight:900;font-size:22px;letter-spacing:-.7px;color:var(--text);cursor:pointer}.logo span{color:var(--primary)}
+.navlinks{display:flex;gap:6px;align-items:center}.navlinks button{background:transparent;padding:10px 14px;border-radius:12px;color:var(--muted);font-weight:700}.navlinks button:hover,.navlinks button.active{background:#f0edff;color:var(--primary)}
+.cta{background:var(--primary)!important;color:white!important;box-shadow:0 7px 18px rgba(108,76,255,.25)}
+.page{display:none;animation:fade .28s ease}.page.active{display:block}@keyframes fade{from{opacity:.2;transform:translateY(7px)}to{opacity:1;transform:none}}
+.container{max-width:1180px;margin:auto;padding:46px 22px}
+.hero{padding:76px 22px 52px;max-width:1180px;margin:auto;display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center}
+.badge{display:inline-flex;padding:8px 12px;border-radius:999px;background:#eeeaff;color:var(--primary);font-weight:800;font-size:13px}
+h1{font-size:clamp(42px,6vw,70px);line-height:.98;letter-spacing:-3px;margin:18px 0}
+h2{font-size:34px;letter-spacing:-1.3px;margin:0 0 10px}h3{margin:0 0 7px}
+.lead{font-size:18px;line-height:1.65;color:var(--muted);max-width:650px}
+.hero-actions{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+.btn{padding:13px 18px;border-radius:13px;font-weight:800;background:#fff;border:1px solid var(--border);color:var(--text)}
+.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}.btn.small{padding:9px 12px;font-size:13px}
+.hero-card{background:linear-gradient(145deg,#1d2140,#30256b);border-radius:28px;padding:26px;color:#fff;box-shadow:var(--shadow);min-height:340px}
+.mini-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.dot{width:10px;height:10px;background:#7ff0bd;border-radius:50%;display:inline-block;margin-right:8px}
+.mock-card{background:rgba(255,255,255,.1);padding:17px;border:1px solid rgba(255,255,255,.13);border-radius:17px;margin:10px 0}.mock-card b{display:block;margin-bottom:7px}.mock-meta{font-size:13px;color:#d5d6e8}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:35px}.stat{background:var(--surface);padding:19px;border:1px solid var(--border);border-radius:16px}.stat b{font-size:24px}.stat span{display:block;color:var(--muted);font-size:13px;margin-top:4px}
+.section-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:25px}.section-head p{color:var(--muted);margin:0}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 25px}.input,.select,.textarea{width:100%;border:1px solid var(--border);background:#fff;border-radius:12px;padding:13px 14px;outline:none;color:var(--text)}.input:focus,.select:focus,.textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px #eeeaff}.search{flex:1;min-width:220px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{background:#fff;border:1px solid var(--border);padding:9px 13px;border-radius:999px;font-weight:700;color:var(--muted)}.chip.active{background:#eeeaff;color:var(--primary);border-color:#dcd4ff}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:17px}.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:21px;box-shadow:0 6px 20px rgba(29,31,48,.035);transition:.2s}.card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.gig-cat{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;color:var(--primary)}.gig-title{font-size:20px;font-weight:850;margin:8px 0}.gig-desc{color:var(--muted);line-height:1.55;min-height:70px}.price{font-size:22px;font-weight:900;margin:14px 0}.price small{font-size:12px;color:var(--muted);font-weight:600}.card-foot{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.avatar{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;background:#eeeaff;color:var(--primary);font-weight:900}.creator{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:750}
+.form-card{max-width:720px;background:#fff;border:1px solid var(--border);border-radius:24px;padding:28px;box-shadow:var(--shadow)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{margin-bottom:15px}.field label{display:block;font-size:13px;font-weight:800;margin-bottom:7px}.full{grid-column:1/-1}
+.notice{padding:14px 16px;border-radius:13px;margin-bottom:18px;background:#f0edff;color:#4b38ad;font-weight:650}.success{background:var(--success-bg);color:var(--success)}.danger{background:var(--danger-bg);color:var(--danger)}
+.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.booking{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:16px 0;border-bottom:1px solid var(--border)}.booking:last-child{border-bottom:0}.booking h4{margin:0 0 5px}.booking p{margin:0;color:var(--muted);font-size:13px}.status{padding:6px 9px;border-radius:999px;font-size:12px;font-weight:850;white-space:nowrap}.status.pending{background:#fff6df;color:#a66b00}.status.accepted{background:var(--success-bg);color:var(--success)}.status.declined{background:var(--danger-bg);color:var(--danger)}
+.empty{padding:40px 20px;text-align:center;color:var(--muted);border:1px dashed #d7d9e3;border-radius:18px}.modal{position:fixed;inset:0;background:rgba(13,16,28,.48);display:none;place-items:center;padding:20px;z-index:50}.modal.show{display:grid}.modal-box{background:#fff;border-radius:22px;padding:26px;max-width:520px;width:100%;box-shadow:0 25px 80px rgba(0,0,0,.2)}.modal-head{display:flex;justify-content:space-between;align-items:center}.close{background:#f3f4f8;border-radius:50%;width:34px;height:34px;font-size:18px}
+.toast{position:fixed;right:20px;bottom:20px;background:#182033;color:#fff;padding:13px 16px;border-radius:13px;box-shadow:var(--shadow);opacity:0;transform:translateY(12px);pointer-events:none;transition:.25s;z-index:80}.toast.show{opacity:1;transform:none}
+footer{padding:40px 22px;color:var(--muted);text-align:center}
+@media(max-width:850px){.hero{grid-template-columns:1fr;padding-top:45px}.grid{grid-template-columns:1fr 1fr}.dashboard-grid{grid-template-columns:1fr}.navlinks button:not(.cta){display:none}}
+@media(max-width:570px){.grid,.form-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.hero h1{letter-spacing:-2px}.container{padding-top:32px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="logo" onclick="showPage('home')">Skill<span>Swap</span></div>
+    <div class="navlinks">
+      <button data-page="marketplace" onclick="showPage('marketplace')">Browse Gigs</button>
+      <button data-page="post" onclick="showPage('post')">Post a Gig</button>
+      <button data-page="dashboard" onclick="showPage('dashboard')">Creator Dashboard</button>
+      <button data-page="bookings" onclick="showPage('bookings')">My Bookings</button>
+      <button class="cta" onclick="showPage('post')">Start Creating</button>
+    </div>
+  </div>
+</nav>
+
+<main>
+<section id="home" class="page active">
+  <div class="hero">
+    <div>
+      <span class="badge">CREATOR GIG MARKETPLACE</span>
+      <h1>Turn your skills into your next opportunity.</h1>
+      <p class="lead">SkillSwap connects talented young creators with clients looking for design, editing, tutoring, music and more. Discover a skill, book a creator, and get things moving.</p>
+      <div class="hero-actions">
+        <button class="btn primary" onclick="showPage('marketplace')">Explore gigs →</button>
+        <button class="btn" onclick="showPage('post')">Post your skill</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><b id="homeGigCount">0</b><span>live gigs</span></div>
+        <div class="stat"><b id="homeBookingCount">0</b><span>bookings</span></div>
+        <div class="stat"><b>5</b><span>core features</span></div>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="mini-top"><b>SkillSwap marketplace</b><span><i class="dot"></i>Live</span></div>
+      <div class="mock-card"><b>Brand identity design</b><span class="mock-meta">Design · from ₹1,500 · @Aarav</span></div>
+      <div class="mock-card"><b>Short-form video editing</b><span class="mock-meta">Editing · from ₹800 · @Maya</span></div>
+      <div class="mock-card"><b>Math tutoring</b><span class="mock-meta">Tutoring · from ₹500 · @Rohan</span></div>
+      <button class="btn" style="width:100%;margin-top:10px" onclick="showPage('marketplace')">Browse all gigs</button>
+    </div>
+  </div>
+  <div class="container">
+    <div class="section-head"><div><h2>How it works</h2><p>A simple flow for both sides of the marketplace.</p></div></div>
+    <div class="grid">
+      <div class="card"><div class="gig-cat">01 · Creators</div><h3>Post a gig</h3><p class="gig-desc">List your service with a title, category, rate and description.</p></div>
+      <div class="card"><div class="gig-cat">02 · Clients</div><h3>Discover & book</h3><p class="gig-desc">Search and filter gigs, then send a booking request in a few clicks.</p></div>
+      <div class="card"><div class="gig-cat">03 · Both</div><h3>Track the status</h3><p class="gig-desc">Creators accept or decline. Clients can see every booking and its status.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="marketplace" class="page">
+<div class="container">
+  <div class="section-head"><div><h2>Explore gigs</h2><p>Find a creator for your next task.</p></div><button class="btn primary" onclick="showPage('post')">+ Post a gig</button></div>
+  <div class="filters"><input id="searchInput" class="input search" placeholder="Search gigs by title or description..." oninput="renderGigs()"></div>
+  <div id="categoryChips" class="chips"></div>
+  <div id="gigGrid" class="grid" style="margin-top:22px"></div>
+</div>
+</section>
+
+<section id="post" class="page">
+<div class="container">
+  <div class="section-head"><div><h2>Post a gig</h2><p>Show clients what you can do.</p></div></div>
+  <div class="form-card">
+    <div class="notice">Tip: make your title specific and your description clear about what the client receives.</div>
+    <form id="gigForm">
+      <div class="form-grid">
+        <div class="field full"><label>Gig title</label><input required name="title" class="input" placeholder="e.g. I will design a modern Instagram post"></div>
+        <div class="field"><label>Category</label><select required name="category" class="select"><option value="">Choose category</option><option>Design</option><option>Editing</option><option>Tutoring</option><option>Music</option><option>Writing</option><option>Development</option><option>Photography</option></select></div>
+        <div class="field"><label>Rate (₹)</label><input required min="1" type="number" name="rate" class="input" placeholder="1500"></div>
+        <div class="field full"><label>Description</label><textarea required name="description" class="textarea" rows="6" placeholder="Describe your service, deliverables and what the client should expect..."></textarea></div>
+        <div class="field full"><label>Creator name</label><input required name="creator" class="input" placeholder="e.g. Sakshi"></div>
+      </div>
+      <button class="btn primary" type="submit">Publish gig</button>
+    </form>
+  </div>
+</div>
+</section>
+
+<section id="dashboard" class="page">
+<div class="container">
+  <div class="section-head"><div><h2>Creator dashboard</h2><p>Review incoming booking requests and choose what to accept.</p></div></div>
+  <div class="notice">For this no-login hackathon prototype, use the creator name you entered while posting a gig. All data is stored locally in this browser.</div>
+  <div id="dashboardContent"></div>
+</div>
+</section>
+
+<section id="bookings" class="page">
+<div class="container">
+  <div class="section-head"><div><h2>My bookings</h2><p>Track the services you've requested.</p></div><button class="btn" onclick="showPage('marketplace')">Find another gig</button></div>
+  <div class="notice">Clients can see Pending, Accepted or Declined status here. A declined booking stays visible so you always know what happened.</div>
+  <div id="bookingsContent"></div>
+</div>
+</section>
+</main>
+
+<div id="bookingModal" class="modal">
+  <div class="modal-box">
+    <div class="modal-head"><div><div class="gig-cat">BOOK A GIG</div><h2 id="modalTitle" style="font-size:26px"></h2></div><button class="close" onclick="closeModal()">×</button></div>
+    <p id="modalCreator" style="color:var(--muted)"></p>
+    <form id="bookingForm">
+      <input type="hidden" name="gigId">
+      <div class="field"><label>Your name</label><input required name="client" class="input" placeholder="e.g. Priya"></div>
+      <div class="field"><label>What do you need?</label><textarea required name="request" class="textarea" rows="4" placeholder="Briefly describe your requirement..."></textarea></div>
+      <button class="btn primary" style="width:100%" type="submit">Send booking request</button>
+    </form>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+<footer>SkillSwap · Creator gig marketplace · Built for Code2Career</footer>
+
+<script>
+const seedGigs=[
+ {id:"g1",title:"Brand identity design",category:"Design",rate:1500,description:"A clean starter brand identity with social-ready visuals and a polished direction.",creator:"Aarav",created:Date.now()-500000},
+ {id:"g2",title:"Short-form video editing",category:"Editing",rate:800,description:"Fast-paced reels and short videos with captions, cuts and social-first pacing.",creator:"Maya",created:Date.now()-300000},
+ {id:"g3",title:"Math tutoring",category:"Tutoring",rate:500,description:"Friendly one-on-one help with school and first-year math concepts.",creator:"Rohan",created:Date.now()-100000}
+];
+let gigs=JSON.parse(localStorage.getItem("ss_gigs")||"null")||seedGigs;
+let bookings=JSON.parse(localStorage.getItem("ss_bookings")||"[]");
+let selectedCategory="All";
+
+function save(){localStorage.setItem("ss_gigs",JSON.stringify(gigs));localStorage.setItem("ss_bookings",JSON.stringify(bookings));updateStats()}
+function updateStats(){document.getElementById("homeGigCount").textContent=gigs.length;document.getElementById("homeBookingCount").textContent=bookings.length}
+function showPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll(".navlinks [data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ if(id==="marketplace")renderGigs(); if(id==="dashboard")renderDashboard(); if(id==="bookings")renderBookings();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function renderCategories(){
+ const cats=["All",...new Set(gigs.map(g=>g.category))];
+ document.getElementById("categoryChips").innerHTML=cats.map(c=>`<button class="chip ${selectedCategory===c?'active':''}" onclick="selectedCategory='${c.replaceAll("'","\\'")}';renderGigs()">${c}</button>`).join("");
+}
+function renderGigs(){
+ renderCategories();
+ const q=(document.getElementById("searchInput")?.value||"").toLowerCase().trim();
+ let list=gigs.filter(g=>(selectedCategory==="All"||g.category===selectedCategory)&&(!q||(g.title+" "+g.description+" "+g.creator).toLowerCase().includes(q)));
+ // DP3: newest gigs first. Clear, predictable discovery for a young marketplace.
+ list.sort((a,b)=>b.created-a.created);
+ const grid=document.getElementById("gigGrid");
+ if(!list.length){grid.innerHTML=`<div class="empty" style="grid-column:1/-1">No gigs match your search. Try another category or post the first one.</div>`;return}
+ grid.innerHTML=list.map(g=>`<article class="card">
+   <div class="gig-cat">${g.category}</div><div class="gig-title">${esc(g.title)}</div>
+   <p class="gig-desc">${esc(g.description)}</p>
+   <div class="price">₹${Number(g.rate).toLocaleString("en-IN")} <small>/ gig</small></div>
+   <div class="card-foot"><div class="creator"><div class="avatar">${esc(g.creator[0]||"C")}</div>${esc(g.creator)}</div><button class="btn small primary" onclick="openBooking('${g.id}')">Book gig</button></div>
+ </article>`).join("");
+}
+function openBooking(id){
+ const g=gigs.find(x=>x.id===id);if(!g)return;
+ document.getElementById("modalTitle").textContent=g.title;
+ document.getElementById("modalCreator").textContent=`${g.category} · ₹${Number(g.rate).toLocaleString("en-IN")} · Creator: ${g.creator}`;
+ document.querySelector('#bookingForm [name="gigId"]').value=id;
+ document.getElementById("bookingModal").classList.add("show");
+}
+function closeModal(){document.getElementById("bookingModal").classList.remove("show")}
+document.getElementById("bookingForm").addEventListener("submit",e=>{
+ e.preventDefault();const fd=new FormData(e.target);const gig=gigs.find(g=>g.id===fd.get("gigId"));
+ // DP2: multiple clients may request a gig while requests are Pending; creator decides which requests to accept.
+ bookings.push({id:"b"+Date.now(),gigId:gig.id,gigTitle:gig.title,creator:gig.creator,client:fd.get("client"),request:fd.get("request"),status:"Pending",created:Date.now()});
+ save();closeModal();e.target.reset();showPage("bookings");toast("Booking request sent — status: Pending");
+});
+document.getElementById("gigForm").addEventListener("submit",e=>{
+ e.preventDefault();const fd=new FormData(e.target);
+ gigs.push({id:"g"+Date.now(),title:fd.get("title"),category:fd.get("category"),rate:Number(fd.get("rate")),description:fd.get("description"),creator:fd.get("creator"),created:Date.now()});
+ save();e.target.reset();showPage("marketplace");toast("Gig published successfully!");
+});
+function renderDashboard(){
+ const creators=[...new Set(gigs.map(g=>g.creator))];
+ const mine=bookings.filter(b=>creators.includes(b.creator));
+ const box=document.getElementById("dashboardContent");
+ if(!mine.length){box.innerHTML=`<div class="empty">No incoming bookings yet.<br><br>Post a gig to start receiving requests.</div>`;return}
+ box.innerHTML=`<div class="dashboard-grid"><div class="card"><h3>Incoming requests</h3><p style="color:var(--muted)">Accept or decline each request.</p>${mine.map(b=>bookingRow(b,true)).join("")}</div><div class="card"><h3>Quick view</h3><div class="stats" style="margin-top:15px"><div class="stat"><b>${mine.filter(b=>b.status==="Pending").length}</b><span>pending</span></div><div class="stat"><b>${mine.filter(b=>b.status==="Accepted").length}</b><span>accepted</span></div><div class="stat"><b>${mine.filter(b=>b.status==="Declined").length}</b><span>declined</span></div></div></div></div>`;
+}
+function bookingRow(b,actions){
+ return `<div class="booking"><div><h4>${esc(b.gigTitle)}</h4><p>Client: ${esc(b.client)} · ${esc(b.request)}</p></div><div style="display:flex;align-items:center;gap:7px">${actions&&b.status==="Pending"?`<button class="btn small" onclick="setStatus('${b.id}','Declined')">Decline</button><button class="btn small primary" onclick="setStatus('${b.id}','Accepted')">Accept</button>`:`<span class="status ${b.status.toLowerCase()}">${b.status}</span>`}</div></div>`
+}
+function renderBookings(){
+ const box=document.getElementById("bookingsContent");
+ if(!bookings.length){box.innerHTML=`<div class="empty">You don't have any bookings yet.<br><br><button class="btn primary" onclick="showPage('marketplace')">Browse gigs</button></div>`;return}
+ box.innerHTML=`<div class="card">${bookings.map(b=>bookingRow(b,false)).join("")}</div>`;
+}
+function setStatus(id,status){
+ const b=bookings.find(x=>x.id===id);if(!b)return;b.status=status;save();renderDashboard();renderBookings();toast(`Booking ${status.toLowerCase()}. Client status updated.`);
+}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2600)}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+document.getElementById("bookingModal").addEventListener("click",e=>{if(e.target.id==="bookingModal")closeModal()});
+updateStats();renderGigs();
+</script>
+</body>
+</html>
